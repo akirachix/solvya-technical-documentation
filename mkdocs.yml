@@ -1,0 +1,43 @@
+---
+site_name: Solvya Technical Documentation
+site_description: >-
+  Technical documentation for the Solvya Healthcare Equipment Management System
+site_author: Solvya Development Team
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - Project:
+      - Overview: overview.md
+      - Architecture: architecture.md
+  - Technical Documentation:
+      - Technical Reference: technical-reference.md
+      - API Reference: api-reference.md
+      - Database Design: database-design.md
+      - Frontend Documentation: frontend-documentation.md
+      - Backend Documentation: backend-documentation.md
+      - Authentication and Security: authentication-and-security.md
+  - Guides:
+      - Developer Guide: developer-guide.md
+      - Deployment Guide: deployment-guide.md
+      - Testing: testing.md
+  - Glossary: glossary.md

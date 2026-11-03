@@ -3,7 +3,6 @@ site_name: Solvya Technical Documentation
 site_description: >-
   Technical documentation for the Solvya Healthcare Equipment Management System
 site_author: Solvya Development Team
-
 theme:
   name: material
   logo: assets/images/waliin-sidebar-logo.svg
@@ -52,6 +51,7 @@ nav:
       - Developer Guide: developer-guide.md
       - Deployment Guide: deployment-guide.md
       - Testing: testing.md
+      - Documentation Review: documentation-review.md
 
   - Team: team.md
 

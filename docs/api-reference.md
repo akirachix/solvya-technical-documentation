@@ -1,10 +1,13 @@
+
 # API Reference
 
 ## 1. Introduction
 
 This document describes the HTTP API endpoints registered by the Waliin FastAPI backend.
 
-The API supports authentication, user management, equipment management, fault reporting, technical assessments, repair verification and maintenance reporting.
+The API supports authentication, user management, dashboard information, equipment management, fault reporting, technical assessments, repair verification, maintenance reporting, notifications, and resource requests.
+
+The backend is built using FastAPI and exposes RESTful endpoints that allow the frontend applications to communicate with the system.
 
 ## 2. API Information
 
@@ -14,11 +17,14 @@ The API supports authentication, user management, equipment management, fault re
 | Framework | FastAPI |
 | API version | 0.1.0 |
 | Data format | JSON |
+| Database | PostgreSQL |
 | Health endpoint | `/health` |
+| Interactive documentation | `/docs` |
+| OpenAPI schema | `/openapi.json` |
 
 The backend routers are registered in `main.py`.
 
-The frontend can use `BACKEND_API_PREFIX` to configure the API prefix. The documented backend routes below are the paths declared by the FastAPI routers.
+The frontend can use `BACKEND_API_PREFIX` to configure the API prefix. The endpoint paths documented below represent the routes declared by the FastAPI routers.
 
 ## 3. Authentication Endpoints
 
@@ -42,14 +48,26 @@ Base path: `/users`
 
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/users` | Create a user |
+| POST | `/users` | Create a user invitation |
 | GET | `/users` | Retrieve users |
 | PATCH | `/users/{user_id}` | Update a user |
 | POST | `/users/{user_id}/resend-invite` | Resend a user invitation |
 | POST | `/users/{user_id}/revoke` | Revoke a user |
 | POST | `/users/{user_id}/send-reset-link` | Send a password reset link |
 
-## 5. Equipment Management Endpoints
+User management operations are restricted to health managers.
+
+## 5. Dashboard Endpoints
+
+Base path: `/dashboard`
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/dashboard/summary` | Retrieve dashboard summary information |
+
+The dashboard endpoint provides summary information used by the management dashboard.
+
+## 6. Equipment Management Endpoints
 
 Base path: `/equipment`
 
@@ -59,7 +77,6 @@ Base path: `/equipment`
 | GET | `/equipment/departments` | List departments |
 | GET | `/equipment/departments/{department_id}` | Retrieve a department |
 | PATCH | `/equipment/departments/{department_id}` | Update a department |
-| DELETE | `/equipment/departments/{department_id}` | Deactivate a department |
 | PATCH | `/equipment/departments/{department_id}/deactivate` | Deactivate a department |
 | POST | `/equipment` | Register equipment |
 | GET | `/equipment` | List equipment |
@@ -76,7 +93,7 @@ Base path: `/equipment`
 | DELETE | `/equipment/documents/{doc_id}` | Delete an equipment document |
 | POST | `/equipment/import-csv` | Import equipment from CSV |
 
-## 6. Fault Management Endpoints
+## 7. Fault Management Endpoints
 
 Base path: `/faults`
 
@@ -85,19 +102,32 @@ Base path: `/faults`
 | POST | `/faults/` | Create a fault report |
 | GET | `/faults/` | List fault reports |
 | GET | `/faults/{fault_id}` | Retrieve a fault report |
-| POST | `/faults/{fault_id}/assign` | Assign a fault |
+| POST | `/faults/{fault_id}/assign` | Assign a fault to a biomedical engineer |
 | POST | `/faults/{fault_id}/status` | Update fault status |
 | POST | `/faults/{fault_id}/close` | Close a fault report |
-| GET | `/faults/priority-list` | Retrieve the fault priority list |
 
-## 7. Fault Assessment Endpoints
+## 8. Fault Assessment Endpoints
+
+Base path: `/faults`
 
 | Method | Endpoint | Description |
 |---|---|---|
 | POST | `/faults/{fault_id}/assessments` | Create a fault assessment |
 | GET | `/faults/{fault_id}/assessments` | Retrieve fault assessments |
 
-## 8. Repair Work Endpoints
+These endpoints support technical assessment and rule-based fault prioritisation.
+
+## 9. Priority List Endpoints
+
+Base path: `/faults`
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/faults/priority-list` | Retrieve the prioritised fault list |
+
+The priority list provides information used to support equipment maintenance and repair prioritisation.
+
+## 10. Repair Work Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -106,7 +136,9 @@ Base path: `/faults`
 | POST | `/faults/{fault_id}/release` | Record equipment release |
 | GET | `/faults/{fault_id}/records` | Retrieve repair records |
 
-## 9. Repair Verification Endpoints
+These endpoints support the documentation of repair activities, functional testing, safety testing, and equipment release.
+
+## 11. Repair Verification Endpoints
 
 Base path: `/repair-verification-records`
 
@@ -118,35 +150,83 @@ Base path: `/repair-verification-records`
 | PUT | `/repair-verification-records/{record_id}` | Update a verification record |
 | DELETE | `/repair-verification-records/{record_id}` | Delete a verification record |
 
-**Important:** These endpoints require a `user_id` HTTP header.
+The list endpoint supports pagination through `skip` and `limit` query parameters.
 
-The list endpoint supports pagination through `skip` and `limit` parameters.
-
-## 10. Maintenance Reporting Endpoints
+## 12. Maintenance Reporting Endpoints
 
 Base path: `/reports`
 
 | Method | Endpoint | Description |
 |---|---|---|
 | GET | `/reports/maintenance-summary` | Retrieve a maintenance summary |
-| GET | `/reports/maintenance-summary/pdf` | Generate a maintenance summary PDF |
+| GET | `/reports/maintenance-summary/pdf` | Generate and download a maintenance summary PDF |
 
-## 11. Health Check Endpoint
+These endpoints provide maintenance information for reporting and management purposes.
+
+## 13. Notification Endpoints
+
+Base path: `/notifications`
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/notifications/` | Create a notification |
+| GET | `/notifications/` | List notifications |
+| GET | `/notifications/me` | Retrieve notifications for the current user |
+| GET | `/notifications/{id}` | Retrieve a specific notification |
+| POST | `/notifications/{id}/read` | Mark a notification as read |
+
+The notification endpoints support in-app notifications and read-status tracking.
+
+## 14. Resource Request Endpoints
+
+These endpoints manage requests for spare parts, technical support, replacement resources, and new equipment.
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/requests` | Create a resource request |
+| GET | `/requests` | List resource requests |
+| GET | `/requests/overdue` | Retrieve overdue resource requests |
+| GET | `/requests/{request_id}` | Retrieve a specific resource request |
+| PATCH | `/requests/{request_id}` | Update a resource request |
+| POST | `/requests/{request_id}/decide` | Approve or reject a resource request |
+
+## 15. Request Item Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/requests/{request_id}/items` | Retrieve items associated with a resource request |
+| PATCH | `/requests/{request_id}/items/{item_id}` | Update a requested item |
+
+These endpoints manage individual items and their quantities within resource requests.
+
+## 16. Request Follow-up Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/requests/{request_id}/follow-ups` | Create a follow-up record |
+| GET | `/requests/{request_id}/follow-ups` | Retrieve follow-ups for a resource request |
+| POST | `/follow-ups/{follow_up_id}/reply` | Record a response to a follow-up |
+| PATCH | `/follow-ups/{follow_up_id}` | Update a follow-up record |
+
+Follow-up records document external communication and responses relating to resource requests.
+
+## 17. Health Check Endpoint
 
 | Method | Endpoint | Description |
 |---|---|---|
 | GET | `/health` | Check backend application availability |
 
-The health endpoint returns:
+The health endpoint returns a JSON response indicating application availability.
+
+Example response:
 
 ```json
 {
   "status": "ok"
 }
-
 ```
 
-## 12. API Error Handling
+## 18. API Error Handling
 
 The backend uses a centralized service error handler.
 
@@ -157,15 +237,17 @@ Service errors are returned with:
 
 The frontend API client also provides an `ApiError` class for handling HTTP errors.
 
-## 13. API Documentation Notes
+## 19. API Documentation Notes
 
 - Endpoint paths reflect routes registered by the FastAPI application.
 - HTTP methods identify the supported operation.
 - Request bodies and response schemas should be checked against the corresponding endpoint implementation.
 - Authentication and authorization requirements should be verified for each endpoint.
-- Repair verification endpoints require a `user_id` HTTP header.
+- Some endpoints use the authenticated session cookie, while others have their own request-level identity or role handling.
+- Pagination parameters are available on supported list endpoints.
+- The interactive Swagger documentation provides additional information about request parameters, response schemas, and endpoint operations.
 
-## 14. Related Documentation
+## 20. Related Documentation
 
 - [Backend Documentation](backend-documentation.md)
 - [Authentication and Security](authentication-and-security.md)
@@ -173,9 +255,17 @@ The frontend API client also provides an `ApiError` class for handling HTTP erro
 - [System Architecture](architecture.md)
 - [Technical Reference](technical-reference.md)
 
-## Interactive API Explorer
+## 21. Interactive API Explorer
 
-Waliin provides interactive API documentation through Swagger UI. The documentation allows developers to explore the backend API endpoints, inspect request parameters, review response schemas and understand available operations.
+Waliin provides interactive API documentation through Swagger UI.
+
+The documentation allows developers to:
+
+- Explore registered backend API endpoints.
+- Inspect request parameters and request bodies.
+- Review response schemas.
+- Understand available HTTP operations.
+- Test API operations through the interactive interface.
 
 **Backend API Documentation:**
 

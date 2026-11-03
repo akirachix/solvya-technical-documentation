@@ -1,3 +1,4 @@
+
 # System Architecture
 
 ## 1. Introduction
@@ -5,6 +6,12 @@
 Waliin is a healthcare equipment management system developed by Solvya. Its architecture separates the user interface, backend application logic and persistent data storage.
 
 The system supports equipment registration, fault reporting, technical assessment, repair tracking, verification and maintenance reporting.
+
+## Documentation evidence status
+
+This architecture page documents the intended system structure and project-level design patterns represented in this repository. It is best understood as a design reference and documentation artifact, not a complete runtime-verification of the live application implementation.
+
+Claims about specific services, routes, database objects, environment variables, or deployment topology should be confirmed against the authoritative implementation repository before being treated as final system truth.
 
 The principal application components are:
 
@@ -32,12 +39,48 @@ flowchart TB
     F --> S
     S --> D
     M --> D
+```
+
+## 3. System Architecture Diagram (SAD)
+
+The System Architecture Diagram illustrates the high-level structure of Waliin and the interactions between its users, frontend applications, functional modules, backend API, database and file storage.
+
+The system supports three primary user groups:
+
+- Clinical Staff
+- Biomedical Engineers
+- Health Managers
+
+Clinical Staff and Biomedical Engineers interact with the Progressive Web Application (PWA), while Health Managers use the administrative Dashboard.
+
+The Waliin API acts as the central backend interface, coordinating communication between the frontend applications, functional modules, PostgreSQL database and file storage.
+
+### 3.1 System Architecture Overview
+
+![Waliin System Architecture Diagram](assets/images/solvya-sad.png)
+
+*Figure 1: Waliin System Architecture Diagram.*
+
+### 3.2 Functional Modules
+
+The architecture identifies the following functional modules:
+
+1. Fault Reporting Module
+2. Equipment Prioritization Module
+3. Inspection Logging Module
+4. Document Upload Module
+5. Repair and Verification Module
+6. Equipment Register Module
+7. Resource Request Module
+8. Notification Module
+9. Report Generation Module
+10. Authentication and User Management Module
 
 ## 4. Backend Architecture
 
 The Waliin backend is built with Python and FastAPI. The main application is initialized in `main.py` and registers the API routers.
 
-### 4.1 Backend responsibilities
+### 4.1 Backend Responsibilities
 
 - Authenticate users and manage sessions.
 - Manage user accounts and roles.
@@ -48,7 +91,7 @@ The Waliin backend is built with Python and FastAPI. The main application is ini
 - Manage repair verification records.
 - Generate maintenance summaries and PDF reports.
 
-### 4.2 Main backend components
+### 4.2 Main Backend Components
 
 | Component | Responsibility |
 |---|---|
@@ -59,20 +102,26 @@ The Waliin backend is built with Python and FastAPI. The main application is ini
 | Alembic | Database schema migrations |
 | Pydantic | Request and response validation |
 
-### 4.3 Registered router groups
+### 4.3 Registered Router Groups
 
-The main application registers ten router groups:
+The FastAPI application registers 14 router groups covering the system's backend functionality:
 
 1. Authentication
 2. Users
 3. Dashboard
 4. Equipment
-5. Priority list
-6. Fault assessment
-7. Repair verification
-8. Maintenance reports
-9. Repair work
-10. Fault management
+5. Priority List
+6. Fault Assessment
+7. Repair Verification Records
+8. Maintenance Reports
+9. Repair Work
+10. Fault Management
+11. Notifications
+12. Resource Requests
+13. Request Items
+14. Request Follow-ups
+
+The registered router groups represent backend API organization and are distinct from the ten functional modules shown in the System Architecture Diagram.
 
 ## 5. Database Architecture
 
@@ -127,8 +176,9 @@ sequenceDiagram
     DB-->>API: Return database result
     API-->>UI: Return API response
     UI-->>User: Display result
+```
 
-## Architecture Resources
+## 7. Architecture Resources
 
 The following resources provide additional architecture documentation and system design references.
 

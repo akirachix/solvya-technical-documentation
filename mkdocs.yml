@@ -6,14 +6,21 @@ site_author: Solvya Development Team
 
 theme:
   name: material
+  logo: assets/images/waliin-sidebar-logo.svg
+  font:
+    text: Inter
+    code: Roboto Mono
   features:
-    - navigation.tabs
     - navigation.sections
     - navigation.expand
     - navigation.top
     - search.suggest
     - search.highlight
     - content.code.copy
+    - toc.integrate
+
+extra_css:
+  - assets/stylesheets/extra.css
 
 markdown_extensions:
   - admonition
@@ -26,9 +33,13 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+
   - Project:
       - Overview: overview.md
       - Architecture: architecture.md
+
+  - Brand Guidelines: brand-guideline.md
+
   - Technical Documentation:
       - Technical Reference: technical-reference.md
       - API Reference: api-reference.md
@@ -36,8 +47,12 @@ nav:
       - Frontend Documentation: frontend-documentation.md
       - Backend Documentation: backend-documentation.md
       - Authentication and Security: authentication-and-security.md
+
   - Guides:
       - Developer Guide: developer-guide.md
       - Deployment Guide: deployment-guide.md
       - Testing: testing.md
+
+  - Team: team.md
+
   - Glossary: glossary.md

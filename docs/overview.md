@@ -6,6 +6,10 @@ Waliin is a healthcare equipment management system developed by Solvya. It is de
 
 The platform brings equipment information and maintenance-related activities into one system, helping users manage equipment records, report faults and follow repair activities.
 
+## Documentation status
+
+This overview is a documentation artifact describing the Waliin system as represented in this repository. It is not a runtime-verified implementation record of the live application. The documentation reflects the project design, documented workflows, and intended platform structure, and should be validated against the authoritative project implementation before being treated as operational truth.
+
 ## 2. Project Purpose
 
 Waliin provides a structured way to manage the lifecycle of healthcare equipment.

@@ -1,3 +1,4 @@
+
 ---
 title: Waliin | Solvya Technical Documentation
 hide:
@@ -44,8 +45,12 @@ hide:
         Biomedical engineers register medical equipment, assign departments
         and maintain equipment records.
       </p>
-      <img src="assets/images/biomedical_engineer.png" alt="Biomedical engineer registering equipment"
-           loading="lazy" style="width:100%;height:auto;border-radius:8px;">
+      <img
+        src="assets/images/biomedical_engineer.png"
+        alt="Biomedical engineer registering equipment"
+        loading="lazy"
+        style="width:100%;height:360px;object-fit:contain;border-radius:8px;"
+      >
     </div>
 
     <div class="workflow-card">
@@ -55,8 +60,12 @@ hide:
         Clinical staff report equipment faults and follow their
         progress through the management process.
       </p>
-      <img src="assets/images/doctor.png" alt="Clinical staff reporting equipment faults"
-           loading="lazy" style="width:100%;height:auto;border-radius:8px;">
+      <img
+        src="assets/images/doctor.png"
+        alt="Clinical staff reporting equipment faults"
+        loading="lazy"
+        style="width:100%;height:360px;object-fit:contain;border-radius:8px;"
+      >
     </div>
 
     <div class="workflow-card">
@@ -66,9 +75,12 @@ hide:
         Biomedical engineers assess reported faults, document repair
         activities and record equipment testing.
       </p>
-      <img src="assets/images/doctor_and_biomedical.png"
-           alt="Biomedical engineer and doctor assessing medical equipment"
-           loading="lazy" style="width:100%;height:auto;border-radius:8px;">
+      <img
+        src="assets/images/doctor_and_biomedical.png"
+        alt="Biomedical engineer and doctor assessing medical equipment"
+        loading="lazy"
+        style="width:100%;height:360px;object-fit:contain;border-radius:8px;"
+      >
     </div>
 
     <div class="workflow-card">
@@ -78,8 +90,12 @@ hide:
         Health managers oversee equipment information, review
         maintenance activity and access reports.
       </p>
-      <img src="assets/images/health_manager.png" alt="Health manager"
-           loading="lazy" style="width:100%;height:auto;border-radius:8px;">
+      <img
+        src="assets/images/health_manager.png"
+        alt="Health manager"
+        loading="lazy"
+        style="width:100%;height:360px;object-fit:contain;border-radius:8px;"
+      >
     </div>
   </div>
 </div>

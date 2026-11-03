@@ -1,3 +1,4 @@
+
 # Backend Documentation
 
 ## 1. Introduction
@@ -83,18 +84,26 @@ It defines the FastAPI application with the following metadata:
 
 ### 4.1 Registered routers
 
-The following ten routers are registered using `app.include_router()`:
+The main application registers 14 router groups using `app.include_router()`.
+
+The registered router groups cover:
 
 1. Authentication
 2. Users
 3. Dashboard
 4. Equipment
-5. Priority list
-6. Fault assessments
-7. Repair verification records
-8. Maintenance reports
-9. Repair work
-10. Fault management
+5. Priority List
+6. Fault Assessments
+7. Repair Verification Records
+8. Maintenance Reports
+9. Repair Work
+10. Fault Management
+11. Notifications
+12. Resource Requests
+13. Request Items
+14. Request Follow-ups
+
+Each router groups related endpoints and delegates application operations to the relevant service and repository components.
 
 The application also exposes a health-check endpoint:
 
@@ -141,7 +150,7 @@ The migration environment imports the application's SQLAlchemy metadata and supp
 
 ## 6. API Documentation
 
-The backend exposes its functionality through ten registered router modules.
+The backend exposes its functionality through 14 registered router groups.
 
 The paths below are the router paths declared in the application. No additional global API prefix is declared in `main.py`.
 
@@ -296,6 +305,79 @@ The summary endpoint returns `MaintenanceReportSummary`.
 
 The PDF endpoint returns a `StreamingResponse` with the media type `application/pdf`. The generated file is named `waliin-maintenance-report.pdf`.
 
+### 6.11 Notifications API
+
+Router prefix: `/notifications`
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/notifications/` | Create a notification |
+| GET | `/notifications/` | List notifications for the authenticated user |
+| GET | `/notifications/me` | Retrieve the authenticated user's notifications |
+| GET | `/notifications/{id}` | Retrieve a specific notification |
+| POST | `/notifications/{id}/read` | Mark a notification as read |
+
+The notification router uses `NotificationService` for notification operations.
+
+The router uses the `get_current_user` dependency to identify the authenticated user. Notification retrieval and read operations are scoped to that user.
+
+The create endpoint returns HTTP 201 when a notification is created.
+
+### 6.12 Resource Requests API
+
+The resource requests router does not declare an explicit prefix.
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/requests` | Create a resource request |
+| GET | `/requests` | List resource requests |
+| GET | `/requests/overdue` | Retrieve overdue requests |
+| GET | `/requests/{request_id}` | Retrieve a specific request |
+| PATCH | `/requests/{request_id}` | Update a resource request |
+| POST | `/requests/{request_id}/decide` | Record a manager's decision on a request |
+
+The router delegates operations to `resource_requests_service`.
+
+The request creation endpoint accepts a `ResourceRequestsCreate` payload.
+
+The update endpoint accepts a `ResourceRequestsUpdate` payload, while the decision endpoint accepts a `ResourceRequestsDecide` payload.
+
+The decision endpoint reads `x_user_role` and `user_id` from request headers and delegates the decision operation to the service layer.
+
+### 6.13 Request Items API
+
+The request items router manages individual items associated with resource requests.
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/requests/{request_id}/items` | Retrieve items belonging to a request |
+| PATCH | `/requests/{request_id}/items/{item_id}` | Update the fulfilled quantity of a request item |
+
+The router delegates operations to the request items service.
+
+The GET endpoint returns a list of `RequestItemsResponse` objects.
+
+The PATCH endpoint accepts an optional `quantity_fulfilled` query parameter and returns the updated request item.
+
+### 6.14 Request Follow-ups API
+
+The request follow-ups router supports communication and follow-up records associated with resource requests.
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/requests/{request_id}/follow-ups` | Create a follow-up record |
+| GET | `/requests/{request_id}/follow-ups` | Retrieve follow-ups for a request |
+| POST | `/follow-ups/{follow_up_id}/reply` | Record a reply to a follow-up |
+| PATCH | `/follow-ups/{follow_up_id}` | Update a follow-up record |
+
+The router delegates operations to `request_follow_ups_service`.
+
+The creation endpoint accepts a `RequestFollowUpsCreate` payload and returns HTTP 201.
+
+The reply endpoint accepts a `RequestFollowUpsReply` payload, while the update endpoint accepts a `RequestFollowUpsUpdate` payload.
+
+The follow-up creation endpoint reads the user role and user ID from request headers.
+
 ## 7. Authentication and Authorization
 
 The backend implements session-based authentication.
@@ -328,11 +410,21 @@ Role-based dependencies restrict access to operations according to the required 
 
 ### 7.3 Password and MFA security
 
-The implementation uses Argon2 password hashing.
+The backend implements several controls to protect user authentication and session information.
 
-MFA-related functionality includes setup, confirmation and verification endpoints. The application configuration also provides an MFA encryption key setting.
+These include:
 
-## 8. Application Configuration
+- **Password hashing:** Argon2 is used to hash user passwords.
+- **Multi-factor authentication:** The backend supports six-digit TOTP verification.
+- **MFA secret encryption:** Stored MFA secrets are encrypted using AES-256-GCM.
+- **Session-token protection:** Session tokens are stored as hashes rather than plaintext values.
+- **Login-attempt limiting:** The login flow implements an attempt limiter to restrict repeated authentication attempts.
+
+The MFA encryption key is supplied through application configuration.
+
+The login-attempt limiter is maintained in application memory. Its state does not persist across server restarts and should not be described as a distributed rate-limiting mechanism.
+
+## 8. Environment Configuration
 
 Application settings are managed through `config.py` using Pydantic Settings.
 
@@ -380,26 +472,15 @@ The project README documents deployment using Heroku and CI workflows.
 
 Production configuration values, including database connection and security settings, should be supplied through the deployment environment rather than committed to source control.
 
-## 11. Unregistered Router Modules
+## 11. Summary
 
-The backend repository also contains the following router modules:
+The Waliin backend provides a FastAPI-based REST API for managing medical equipment lifecycles in Ethiopian hospitals.
 
-- `notification.py`
-- `request_follow_ups.py`
-- `request_items.py`
-- `resource_requests.py`
+Its 14 registered router groups cover authentication, user management, equipment registration, fault reporting and assessment, prioritisation, repair operations, verification records, maintenance reporting, notifications and resource request workflows.
 
-These files exist in the routers directory but are not included through `app.include_router()` in the inspected `main.py`.
+The layered architecture separates routing, validation, business logic and database access. SQLAlchemy and PostgreSQL support data persistence, while Alembic manages database schema migrations.
 
-They are therefore excluded from the list of active application routes in this documentation.
-
-## 12. Summary
-
-The Waliin backend provides a FastAPI-based service for managing medical equipment lifecycles.
-
-Its registered API modules cover authentication, user management, equipment management, fault reporting and assessment, repair operations, verification records, maintenance reports, prioritised faults and dashboard summaries.
-
-The layered architecture separates routing, validation, business logic and database access, while SQLAlchemy and Alembic support persistence and schema management.
+Authentication and security controls include Argon2 password hashing, multi-factor authentication, encrypted MFA secrets and session management.
 
 ## Backend Resources
 

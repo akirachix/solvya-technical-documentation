@@ -4,6 +4,12 @@ Technical documentation repository for the **Solvya Healthcare Equipment Managem
 
 This repository contains the documentation structure and configuration for maintaining, building, and publishing Solvya technical documentation using MkDocs and Material for MkDocs.
 
+## Documentation status and review boundary
+
+This repository is the documentation site for the Solvya project and is not the source-of-truth implementation repository for the live application. The content in these pages should therefore be treated as a curated design-level documentation package and operational reference for the project, rather than a runtime-verified record of the production application.
+
+When implementation details are described in this site, they should be cross-checked against the authoritative application repository before being used as production truth for deployment, security decisions, or system behavior.
+
 ## Technologies Used
 
 - Python

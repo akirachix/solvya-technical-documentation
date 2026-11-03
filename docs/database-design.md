@@ -1,3 +1,4 @@
+
 # Database Design
 
 ## 1. Overview
@@ -294,6 +295,10 @@ The `entity_type` field is constrained to the supported audit entity types.
 
 ## 3. Relationships and Foreign Keys
 
+The Entity Relationship Diagram (ERD) below illustrates the database tables, their attributes, primary keys, foreign keys, and relationships.
+
+![Waliin Database Entity Relationship Diagram](assets/images/erd_diagram.png)
+
 The database uses foreign keys to maintain relationships between records.
 
 The main relationships include:
@@ -366,6 +371,7 @@ Other application enums are represented as string columns with database `CHECK` 
 The migration defines database checks to protect data consistency.
 
 **Users**
+
 - Email addresses must be normalized to lowercase and trimmed.
 - Users other than health managers must have a department.
 - Invitation acceptance and password fields must be consistent.
@@ -374,21 +380,25 @@ The migration defines database checks to protect data consistency.
 - Token version cannot be negative.
 
 **Departments**
+
 - Responsible engineer role must be `biomedical_engineer`.
 
 **Equipment**
+
 - Asset tags must be unique.
 - Approval status must be consistent with the presence of an approver and approval timestamp.
 - Approver role must be `health_manager`.
 - Warranty end date cannot precede the warranty start date.
 
 **Faults**
+
 - Severity and status must use supported values.
 - Assigned engineer role must be `biomedical_engineer`.
 - Faults in statuses other than `reported` and `cancelled` must have an assigned engineer.
 - Closed and cancelled faults must have a closure timestamp.
 
 **Fault assessments**
+
 - Assessment values must fall within defined ranges.
 - Severity factor must be between 1 and 4.
 - Clinical criticality must be between 1 and 3.
@@ -398,6 +408,7 @@ The migration defines database checks to protect data consistency.
 - Assessor role must be `biomedical_engineer`.
 
 **Repair verification**
+
 - Authorization to return equipment to service is only allowed for a `release` record.
 - A release timestamp must be present when service authorization is granted.
 - Repair records must include work performed.
@@ -406,21 +417,25 @@ The migration defines database checks to protect data consistency.
 - The performer role must be `biomedical_engineer`.
 
 **Resource requests**
+
 - Non-pending requests must have a decision-maker and decision timestamp.
 - Resolved requests must have a resolution timestamp.
 - Decision-maker role must be `health_manager`.
 
 **Request items**
+
 - Requested quantity must be greater than zero.
 - Approved quantity cannot exceed requested quantity.
 - Fulfilled quantity cannot exceed approved quantity when an approved quantity is recorded.
 
 **Request follow-ups**
+
 - The next follow-up date cannot precede the sent date.
 - Reply status and reply timestamp must be consistent.
 - The logging user role must be `health_manager`.
 
 **Notifications**
+
 - Notification channel is restricted to `in_app`.
 
 ## 6. Indexes and Uniqueness

@@ -1,12 +1,15 @@
+
 # Frontend Documentation
 
 ## 1. Introduction
 
-Waliin's frontend is a web application developed using Next.js, React and TypeScript.
+Waliin's frontend consists of web applications developed using Next.js, React and TypeScript.
 
-It provides the user interface through which users interact with healthcare equipment management functionality.
+It provides the user interfaces through which healthcare professionals interact with the system's equipment management functionality.
 
-The application uses the Next.js App Router and communicates with the FastAPI backend through HTTP API requests.
+The frontend uses the Next.js App Router and communicates with the FastAPI backend through HTTP API requests.
+
+The frontend supports different user roles, providing interfaces for clinical staff, biomedical engineers and health managers.
 
 ## 2. Technology Stack
 
@@ -25,7 +28,7 @@ The application uses the Next.js App Router and communicates with the FastAPI ba
 
 The frontend project organizes its implementation into application routes, reusable components and shared utilities.
 
-### 3.1 Main directories
+### 3.1 Main Directories
 
 | Directory | Responsibility |
 |---|---|
@@ -35,7 +38,7 @@ The frontend project organizes its implementation into application routes, reusa
 | `lib/` | API client, authentication and application utilities |
 | `public/` | Static application assets |
 
-### 3.2 Application entry points
+### 3.2 Application Entry Points
 
 The root layout is defined in `app/layout.tsx`.
 
@@ -64,7 +67,7 @@ The authentication functionality includes:
 - Invitation acceptance.
 - Multi-factor authentication setup and verification.
 
-### 4.1 User roles
+### 4.1 User Roles
 
 The frontend recognizes three user roles:
 
@@ -74,11 +77,15 @@ The frontend recognizes three user roles:
 | `biomedical_engineer` | Biomedical engineering user |
 | `clinical_staff` | Clinical staff user |
 
-### 4.2 Authentication state
+### 4.2 Authentication State
 
 The `UserProfileProvider` provides user profile information through React context.
 
-It retrieves the current user through the backend authentication API and exposes the user information to application components.
+It retrieves the current user through the backend authentication API and exposes user information to application components.
+
+This allows application components to access the current user's profile and role information.
+
+Authentication and authorization are ultimately enforced by the backend.
 
 ## 5. API Integration
 
@@ -97,13 +104,13 @@ Its responsibilities include:
 - Handling HTTP errors.
 - Returning `undefined` for HTTP 204 responses.
 
-### 5.1 API errors
+### 5.1 API Errors
 
 The frontend defines an `ApiError` class that extends JavaScript's `Error` class.
 
 It includes an HTTP status code to help application components handle failed API requests.
 
-### 5.2 Backend connectivity
+### 5.2 Backend Connectivity
 
 The Next.js configuration supports:
 
@@ -112,9 +119,11 @@ The Next.js configuration supports:
 
 When `BACKEND_URL` is configured, the application can rewrite frontend `/api` requests to the configured backend API.
 
+This provides a shared communication path between the frontend and FastAPI backend.
+
 ## 6. Application Routes
 
-The frontend uses the Next.js App Router.
+The frontend uses the Next.js App Router to organize application pages and navigation.
 
 The following application routes are present in the project:
 
@@ -134,9 +143,11 @@ The following application routes are present in the project:
 | `/biomedical-engineer/faults` | Fault management |
 | `/biomedical-engineer/faults/[faultId]` | Fault details |
 
+These routes represent the documented application pages and are not an exhaustive list of every possible frontend route.
+
 ## 7. Shared Interface Components
 
-The frontend includes shared interface components for consistent navigation and user information.
+The frontend includes shared interface components to maintain consistent navigation and user information across application pages.
 
 ### 7.1 Header
 
@@ -174,7 +185,7 @@ Equipment registration components include:
 - `SuccessState`
 - `CsvEquipmentImport`
 
-These components support the equipment registration workflow and CSV import interface.
+These components support the equipment registration workflow, including equipment details, location information, document uploads, review and CSV import functionality.
 
 ## 9. Frontend Styling
 
@@ -187,9 +198,11 @@ The global styling defines:
 - Brand colour variables.
 - Shared visual styling.
 
+Tailwind CSS utilities are used alongside global styles to maintain consistent interface layouts and component presentation.
+
 ## 10. Testing and Build Commands
 
-The frontend provides these npm scripts:
+The frontend provides the following npm scripts:
 
 | Command | Purpose |
 |---|---|
@@ -201,6 +214,8 @@ The frontend provides these npm scripts:
 | `npm run format:check` | Check code formatting |
 | `npm run format` | Format project files |
 
+These commands support local development, production builds, testing and code quality checks.
+
 ## 11. Related Documentation
 
 - [System Architecture](architecture.md)
@@ -209,20 +224,22 @@ The frontend provides these npm scripts:
 - [Database Design](database-design.md)
 - [Authentication and Security](authentication-and-security.md)
 - [Developer Guide](developer-guide.md)
+- [Deployment Guide](deployment-guide.md)
+- [Testing](testing.md)
 
 ## Frontend Application Resources
 
-The following links provide access to the deployed Waliin frontend applications.
+The following links provide access to the deployed Waliin frontend applications and the Solvya informational website.
 
 ### Progressive Web Application (PWA)
 
-The Waliin PWA provides users with access to key equipment management functions, including fault reporting and equipment requests.
+The Waliin PWA provides users with access to key equipment management functions, including equipment-related workflows and fault reporting.
 
 [Open Waliin PWA](https://waliin-solvya.vercel.app/home)
 
 ### Waliin Dashboard
 
-The Waliin Dashboard provides the main interface for accessing the system's management functionality.
+The Waliin Dashboard provides the management interface for accessing the system's administrative and equipment-management functionality.
 
 [Open Waliin Dashboard](https://waliin.vercel.app/)
 

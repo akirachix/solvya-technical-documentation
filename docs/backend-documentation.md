@@ -1,35 +1,53 @@
-
 # Backend Documentation
 
 ## 1. Introduction
 
-The Waliin backend is a REST API built with FastAPI. It supports the management and tracking of medical equipment lifecycles in Ethiopian hospitals.
+The Waliin backend is a REST API built with Python and FastAPI. It supports the management and tracking of medical equipment lifecycles in Ethiopian hospitals.
 
-The backend provides functionality for user authentication, equipment registration and approval, fault reporting, fault assessment, repair management, maintenance reporting and dashboard summaries.
+The backend provides application functionality for equipment registration and approval, fault reporting, fault assessment, repair management, maintenance reporting, dashboard summaries, resource requests and user management.
 
-**Application details**
+### 1.1 Purpose
+
+This document describes the backend implementation of Waliin, including:
+
+- Backend architecture and project structure.
+- Technologies and supporting libraries.
+- Application initialization and configuration.
+- Organization of routers, schemas, services and repositories.
+- HTTP request processing.
+- Database integration.
+- File and document handling.
+- Error handling and validation.
+- Backend testing and code quality.
+
+Detailed endpoint specifications, database structures, authentication mechanisms and deployment procedures are documented separately.
+
+### 1.2 Application Details
 
 | Property | Value |
 |---|---|
-| Application name | Waliin |
+| Application Name | Waliin |
 | Version | 0.1.0 |
+| Programming Language | Python 3.11+ |
 | Framework | FastAPI |
-| Language | Python 3.11+ |
 | Database ORM | SQLAlchemy |
 | Database | PostgreSQL |
-| API style | REST |
+| API Style | REST |
 
 ## 2. Backend Architecture
 
-The backend follows a layered architecture that separates API routing, data validation, business logic and database operations.
+The Waliin backend follows a layered architecture that separates HTTP request handling, data validation, business logic and database operations.
 
-### 2.1 Main components
+This organization provides distinct responsibilities for different backend components and supports the separation of application concerns.
+
+### 2.1 Main Backend Components
 
 | Component | Responsibility |
 |---|---|
+| `main.py` | Initializes the FastAPI application and registers API routers. |
 | `routers/` | Defines API endpoints and handles HTTP requests. |
 | `schemas/` | Defines request validation and response structures using Pydantic. |
-| `services/` | Implements application and business logic. |
+| `services/` | Implements application operations and business logic. |
 | `repositories/` | Handles database access and persistence operations. |
 | `models/` | Defines SQLAlchemy database models. |
 | `security/` | Contains authentication and security-related functionality. |
@@ -37,42 +55,68 @@ The backend follows a layered architecture that separates API routing, data vali
 | `tests/` | Contains automated backend tests. |
 | `templates/` | Contains email templates. |
 
-### 2.2 Request processing
+### 2.2 Separation of Responsibilities
 
-A typical request follows this flow:
+The backend components work together to process application requests.
 
-1. A client sends an HTTP request to an API endpoint.
-2. The corresponding router receives the request.
-3. Pydantic schemas validate incoming data and define response structures.
-4. The service layer processes the business operation.
-5. Repository and model components support database operations.
-6. The router returns the appropriate response to the client.
+- **Routers:** Receive HTTP requests, identify the required operation and coordinate the response.
+- **Schemas:** Validate incoming data and define the structure of response objects.
+- **Services:** Execute application operations and business rules.
+- **Repositories:** Handle data access and persistence operations.
+- **Models:** Represent database entities through SQLAlchemy.
+- **Security:** Provides authentication and security-related functionality.
+
+This separation keeps HTTP handling, application logic and database access organized into distinct components.
 
 ## 3. Technology Stack
 
-The backend uses the following technologies and libraries:
+The backend uses the following technologies and libraries.
+
+### 3.1 Core Technologies
 
 | Technology | Purpose |
 |---|---|
 | Python | Backend programming language |
 | FastAPI | REST API framework |
 | Uvicorn | ASGI application server |
-| SQLAlchemy | ORM and database interaction |
-| PostgreSQL | Relational database |
-| Psycopg | PostgreSQL connectivity |
 | Pydantic | Data validation and serialization |
 | Pydantic Settings | Application configuration |
-| Alembic | Database migrations |
+
+### 3.2 Database Technologies
+
+| Technology | Purpose |
+|---|---|
+| PostgreSQL | Relational database |
+| SQLAlchemy | ORM and database interaction |
+| Psycopg | PostgreSQL connectivity |
+| Alembic | Database schema migrations |
+
+### 3.3 Authentication and Security Libraries
+
+| Technology | Purpose |
+|---|---|
 | PyJWT | JWT-related functionality |
 | pwdlib with Argon2 | Password hashing |
-| Redis | Redis integration support |
 | Cryptography | Cryptographic operations |
+
+### 3.4 Supporting Libraries and Tools
+
+| Technology | Purpose |
+|---|---|
+| Redis | Redis integration support |
 | ReportLab | PDF generation |
 | python-multipart | Multipart form and file uploads |
 | pytest | Automated testing |
+| pytest-cov | Test coverage reporting |
 | Ruff | Python linting and formatting |
 
-## 4. Application Configuration
+## 4. Application Structure
+
+The backend application is initialized through `main.py`, which creates the FastAPI application and registers the available API routers.
+
+The application uses separate directories for routing, validation, business logic, database access, models and security-related functionality.
+
+### 4.1 Application Entry Point
 
 The main application is initialized in `main.py`.
 
@@ -82,11 +126,21 @@ It defines the FastAPI application with the following metadata:
 - Version: 0.1.0
 - Description: Backend API for tracking medical equipment lifecycles in Ethiopian hospitals.
 
-### 4.1 Registered routers
+The entry point also registers the application's API routers and defines the application-level health-check endpoint.
 
-The main application registers 14 router groups using `app.include_router()`.
+**Backend implementation example:**
 
-The registered router groups cover:
+![Waliin backend implementation code example](assets/images/backend_code_snippet.png)
+
+<small>Figure 1: Example of backend implementation code.</small>
+
+### 4.2 Router Organization
+
+The backend organizes HTTP endpoints into router groups based on application functionality.
+
+The main application registers 14 router groups using FastAPI's `app.include_router()` mechanism.
+
+The registered groups are:
 
 1. Authentication
 2. Users
@@ -105,13 +159,85 @@ The registered router groups cover:
 
 Each router groups related endpoints and delegates application operations to the relevant service and repository components.
 
-The application also exposes a health-check endpoint:
+Individual endpoint paths, HTTP methods, request parameters and response structures are documented in the API Reference.
+
+### 4.3 Schema Organization
+
+The `schemas/` directory contains Pydantic schemas used for request validation and response serialization.
+
+Schemas define the expected structure of incoming data and the information returned by the API.
+
+This provides a consistent data contract between the API and its clients.
+
+### 4.4 Service Layer
+
+The `services/` directory contains application operations and business logic.
+
+Services coordinate the processing of application requests and interact with repository components when database access is required.
+
+Examples of backend service responsibilities include:
+
+- Equipment management.
+- Fault assessment.
+- Repair operations.
+- Maintenance reporting.
+- Notification management.
+- Resource request processing.
+- Dashboard summary generation.
+
+### 4.5 Repository Layer
+
+The `repositories/` directory handles database access and persistence operations.
+
+Repository components separate data access responsibilities from the application logic implemented in services.
+
+### 4.6 Model Organization
+
+The `models/` directory contains SQLAlchemy models representing application database entities.
+
+These models provide the ORM representation of the application's persistent data.
+
+Detailed entity definitions, attributes and relationships are documented in Database Design.
+
+### 4.7 Security Components
+
+The `security/` directory contains authentication and security-related functionality.
+
+This includes components used by the application to support user authentication and access restrictions.
+
+Detailed authentication flows, session management, role-based access control and security controls are documented in Authentication and Security.
+
+## 5. Application Configuration
+
+The main FastAPI application is initialized in `main.py`.
+
+The application registers its routers and configures application-level request handling.
+
+### 5.1 Router Registration
+
+The application uses `app.include_router()` to register the 14 router groups.
+
+Each router exposes related endpoints for a particular area of backend functionality.
+
+The router registration process makes these endpoints available through the FastAPI application.
+
+### 5.2 Health Check
+
+The application exposes a health-check endpoint:
 
 | Method | Endpoint | Response |
 |---|---|---|
 | GET | `/health` | `{"status": "ok"}` |
 
-### 4.2 Error handling
+This endpoint provides a basic application health response.
+
+### 5.3 Application Dependencies
+
+The backend uses FastAPI dependencies to provide shared functionality to API operations.
+
+These dependencies support application operations such as database session management and user-related request handling.
+
+### 5.4 Exception Handling
 
 The application implements a custom exception handler for `ServiceError`.
 
@@ -119,15 +245,49 @@ The handler returns a JSON response containing the error message:
 
 `{"detail": error.message}`
 
-The HTTP status code is taken from the exception's `status_code` property.
+The HTTP status code is obtained from the exception's `status_code` property.
 
-## 5. Database Integration
+## 6. Request Processing Lifecycle
+
+A typical backend request follows a layered processing sequence.
+
+### 6.1 Request Processing Flow
+
+1. A client sends an HTTP request to an API endpoint.
+2. The corresponding router receives the request.
+3. Pydantic schemas validate incoming data and define response structures.
+4. The service layer processes the requested business operation.
+5. Repository and model components support database operations when required.
+6. The router returns the appropriate response to the client.
+
+### 6.2 Component Interaction
+
+The request processing lifecycle separates the responsibilities of the different backend layers.
+
+| Stage | Component | Responsibility |
+|---|---|---|
+| Request handling | Router | Receives and processes HTTP requests. |
+| Validation | Schema | Validates request data. |
+| Application processing | Service | Executes business logic. |
+| Data access | Repository | Handles persistence operations. |
+| Data representation | Model | Represents database entities. |
+| Response generation | Router and Schema | Returns structured API responses. |
+
+Not every request requires database access. The processing sequence depends on the operation being performed.
+
+## 7. Database Integration
+
+The backend uses PostgreSQL for persistent application data.
+
+SQLAlchemy provides the ORM functionality used by the application to interact with the database.
+
+Alembic manages database schema migrations.
+
+Detailed database entities, relationships, constraints, indexes, triggers and views are documented in Database Design.
+
+### 7.1 Database Connectivity
 
 Database connectivity is configured in `database.py`.
-
-The backend uses SQLAlchemy to interact with PostgreSQL.
-
-### 5.1 Database session management
 
 The database module:
 
@@ -138,9 +298,20 @@ The database module:
 - Defines the declarative `Base` used by ORM models.
 - Provides a `get_db()` dependency for database session management.
 
-The `get_db()` function creates a session, yields it to the requesting operation and closes it in a `finally` block.
+### 7.2 Database Session Management
 
-### 5.2 Database migrations
+The `get_db()` function manages database sessions for requesting operations.
+
+Its processing sequence is:
+
+1. A database session is created.
+2. The session is provided to the requesting operation.
+3. The operation performs the required database interaction.
+4. The session is closed in a `finally` block.
+
+This ensures that the session is closed after the operation completes.
+
+### 7.3 Database Migrations
 
 Alembic manages database schema migrations.
 
@@ -148,346 +319,111 @@ The migration configuration is stored in `alembic.ini`, while migration environm
 
 The migration environment imports the application's SQLAlchemy metadata and supports online and offline migration execution.
 
-## 6. API Documentation
+## 8. File and Document Handling
 
-The backend exposes its functionality through 14 registered router groups.
+The backend supports file-related operations associated with medical equipment management.
 
-The paths below are the router paths declared in the application. No additional global API prefix is declared in `main.py`.
+The equipment functionality includes endpoints for uploading, downloading and deleting equipment documents.
 
-### 6.1 Authentication API
+The backend also supports CSV-based equipment import.
 
-Router prefix: `/auth`
+### 8.1 File Upload Processing
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/auth/login` | Authenticate a user |
-| POST | `/auth/logout` | Log out a user |
-| GET | `/auth/me` | Retrieve the current user |
-| POST | `/auth/mfa/setup` | Set up multi-factor authentication |
-| POST | `/auth/mfa/confirm` | Confirm MFA setup |
-| POST | `/auth/mfa/verify` | Verify an MFA challenge |
-| POST | `/auth/accept-invite` | Accept a user invitation |
-| POST | `/auth/forgot-password` | Initiate password recovery |
-| POST | `/auth/reset-password` | Reset a user's password |
+The backend uses `python-multipart` to support multipart form and file upload requests.
 
-### 6.2 User Management API
+Equipment document uploads are handled through the equipment API functionality.
 
-Router prefix: `/users`
+The upload operation processes equipment-related documents through the backend.
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/users` | Create a user |
-| GET | `/users` | List users |
-| PATCH | `/users/{user_id}` | Update a user |
-| POST | `/users/{user_id}/resend-invite` | Resend an invitation |
-| POST | `/users/{user_id}/revoke` | Revoke a user |
-| POST | `/users/{user_id}/send-reset-link` | Send a password reset link |
+### 8.2 Document Retrieval
 
-### 6.3 Dashboard API
+The equipment API includes functionality for retrieving and downloading uploaded equipment documents.
 
-Router prefix: `/dashboard`
+Document retrieval is handled through the backend rather than requiring clients to interact directly with the underlying storage implementation.
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/dashboard/summary` | Retrieve dashboard summary data |
+### 8.3 CSV Equipment Import
 
-The endpoint delegates summary generation to `DashboardService` and returns a `DashboardSummary` response.
+The backend provides CSV-based equipment import functionality through the equipment API.
 
-### 6.4 Equipment Management API
+This supports the submission of equipment information through an uploaded CSV file.
 
-Router prefix: `/equipment`
+Detailed file storage configuration and upload validation rules should be documented against their respective implementation components.
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/equipment/departments` | Create a department |
-| GET | `/equipment/departments` | List departments |
-| DELETE | `/equipment/documents/{doc_id}` | Delete an equipment document |
-| GET | `/equipment/departments/{department_id}` | Retrieve a department |
-| PATCH | `/equipment/departments/{department_id}` | Update a department |
-| PATCH | `/equipment/departments/{department_id}/deactivate` | Deactivate a department |
-| POST | `/equipment` | Register equipment |
-| GET | `/equipment` | List equipment |
-| GET | `/equipment/pending` | List pending equipment |
-| GET | `/equipment/out-of-service` | List out-of-service equipment |
-| GET | `/equipment/mine` | List equipment belonging to the current engineer |
-| POST | `/equipment/{equipment_id}/resubmit` | Resubmit equipment |
-| GET | `/equipment/{equipment_id}` | Retrieve equipment details |
-| PATCH | `/equipment/{equipment_id}` | Update equipment |
-| POST | `/equipment/{equipment_id}/approve` | Approve equipment |
-| POST | `/equipment/{equipment_id}/return` | Return equipment |
-| POST | `/equipment/{equipment_id}/documents` | Upload an equipment document |
-| GET | `/equipment/documents/{doc_id}/download` | Download an equipment document |
-| POST | `/equipment/import-csv` | Import equipment using CSV |
+## 9. Error Handling and Validation
 
-The equipment router delegates operations to the equipment service and associated repositories.
+The backend uses Pydantic for request validation and response serialization.
 
-It supports multipart file uploads for equipment documents and CSV imports.
+FastAPI handles HTTP request processing, while the application also implements custom service-level error handling.
 
-### 6.5 Fault Management API
+### 9.1 Request Validation
 
-Router prefix: `/faults`
+Incoming request data is validated using Pydantic schemas.
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/faults/` | Report a fault |
-| GET | `/faults/` | List faults |
-| GET | `/faults/{fault_id}` | Retrieve fault details |
-| POST | `/faults/{fault_id}/assign` | Assign a fault |
-| POST | `/faults/{fault_id}/status` | Update fault status |
-| POST | `/faults/{fault_id}/close` | Close a fault |
+These schemas define the expected data structures and validation requirements for application operations.
 
-### 6.6 Fault Assessment API
+### 9.2 Service-Level Errors
 
-Router prefix: `/faults`
+The application implements a custom `ServiceError` exception handler.
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/faults/{fault_id}/assessments` | Create a fault assessment |
-| GET | `/faults/{fault_id}/assessments` | Retrieve assessments for a fault |
+The handler:
 
-The router uses `AssessmentService` and returns `FaultAssessmentRead` response objects.
+- Retrieves the error message.
+- Uses the exception's HTTP status code.
+- Returns a JSON response containing the error detail.
 
-The currently registered router uses an engineer dependency that reads the engineer UUID from the `X-Engineer-Id` header.
+Example response:
 
-### 6.7 Priority List API
+`{"detail": "Error message"}`
 
-Router prefix: `/faults`
+The actual error message and HTTP status depend on the exception raised by the application.
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/faults/priority-list` | Retrieve the prioritised fault list |
+### 9.3 HTTP Responses
 
-The endpoint uses `PriorityListService` and returns a list of `PriorityListItem` objects.
+The backend returns HTTP responses according to the operation being performed.
 
-### 6.8 Repair Verification Records API
+Responses may contain structured JSON data, error details or generated files.
 
-Router prefix: `/repair-verification-records`
+For example, the maintenance report PDF endpoint returns a `StreamingResponse` with the media type `application/pdf`.
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/repair-verification-records/` | Create a verification record |
-| GET | `/repair-verification-records/` | List verification records |
-| GET | `/repair-verification-records/{record_id}` | Retrieve a verification record |
-| PUT | `/repair-verification-records/{record_id}` | Update a verification record |
-| DELETE | `/repair-verification-records/{record_id}` | Delete a verification record |
-
-The router delegates operations to the repair verification record service.
-
-Its handlers declare a required UUID `user_id` header. The current handlers pass database sessions and relevant payloads to the service functions.
-
-### 6.9 Repair Work API
-
-This router does not declare an explicit prefix.
-
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/faults/{fault_id}/repairs` | Record repair work |
-| POST | `/faults/{fault_id}/tests` | Record repair testing |
-| POST | `/faults/{fault_id}/release` | Release a fault |
-| GET | `/faults/{fault_id}/records` | Retrieve repair records |
-
-The router delegates operations to `services.repair_work`.
-
-The first three endpoints declare a required UUID `user_id` header. The records endpoint does not declare this header.
-
-### 6.10 Maintenance Reports API
-
-Router prefix: `/reports`
-
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/reports/maintenance-summary` | Retrieve maintenance summary data |
-| GET | `/reports/maintenance-summary/pdf` | Generate and download a maintenance summary PDF |
-
-The endpoints use `MaintenanceReportService`.
-
-The summary endpoint returns `MaintenanceReportSummary`.
-
-The PDF endpoint returns a `StreamingResponse` with the media type `application/pdf`. The generated file is named `waliin-maintenance-report.pdf`.
-
-### 6.11 Notifications API
-
-Router prefix: `/notifications`
-
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/notifications/` | Create a notification |
-| GET | `/notifications/` | List notifications for the authenticated user |
-| GET | `/notifications/me` | Retrieve the authenticated user's notifications |
-| GET | `/notifications/{id}` | Retrieve a specific notification |
-| POST | `/notifications/{id}/read` | Mark a notification as read |
-
-The notification router uses `NotificationService` for notification operations.
-
-The router uses the `get_current_user` dependency to identify the authenticated user. Notification retrieval and read operations are scoped to that user.
-
-The create endpoint returns HTTP 201 when a notification is created.
-
-### 6.12 Resource Requests API
-
-The resource requests router does not declare an explicit prefix.
-
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/requests` | Create a resource request |
-| GET | `/requests` | List resource requests |
-| GET | `/requests/overdue` | Retrieve overdue requests |
-| GET | `/requests/{request_id}` | Retrieve a specific request |
-| PATCH | `/requests/{request_id}` | Update a resource request |
-| POST | `/requests/{request_id}/decide` | Record a manager's decision on a request |
-
-The router delegates operations to `resource_requests_service`.
-
-The request creation endpoint accepts a `ResourceRequestsCreate` payload.
-
-The update endpoint accepts a `ResourceRequestsUpdate` payload, while the decision endpoint accepts a `ResourceRequestsDecide` payload.
-
-The decision endpoint reads `x_user_role` and `user_id` from request headers and delegates the decision operation to the service layer.
-
-### 6.13 Request Items API
-
-The request items router manages individual items associated with resource requests.
-
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/requests/{request_id}/items` | Retrieve items belonging to a request |
-| PATCH | `/requests/{request_id}/items/{item_id}` | Update the fulfilled quantity of a request item |
-
-The router delegates operations to the request items service.
-
-The GET endpoint returns a list of `RequestItemsResponse` objects.
-
-The PATCH endpoint accepts an optional `quantity_fulfilled` query parameter and returns the updated request item.
-
-### 6.14 Request Follow-ups API
-
-The request follow-ups router supports communication and follow-up records associated with resource requests.
-
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/requests/{request_id}/follow-ups` | Create a follow-up record |
-| GET | `/requests/{request_id}/follow-ups` | Retrieve follow-ups for a request |
-| POST | `/follow-ups/{follow_up_id}/reply` | Record a reply to a follow-up |
-| PATCH | `/follow-ups/{follow_up_id}` | Update a follow-up record |
-
-The router delegates operations to `request_follow_ups_service`.
-
-The creation endpoint accepts a `RequestFollowUpsCreate` payload and returns HTTP 201.
-
-The reply endpoint accepts a `RequestFollowUpsReply` payload, while the update endpoint accepts a `RequestFollowUpsUpdate` payload.
-
-The follow-up creation endpoint reads the user role and user ID from request headers.
-
-## 7. Authentication and Authorization
-
-The backend implements session-based authentication.
-
-### 7.1 Session management
-
-The session configuration includes:
-
-- Session cookie name: `__Host-waliin_session`
-- Cookie security: Secure
-- HTTP-only: Enabled
-- SameSite policy: Strict
-- Cookie path: `/`
-- Session idle timeout: 15 minutes
-- Maximum session duration: 8 hours
-
-The current session dependency reads the session cookie and validates the session.
-
-Inactive accounts have their sessions ended. The current-user dependency also checks whether MFA verification has been completed.
-
-### 7.2 User roles
-
-The backend defines three user roles:
-
-- `clinical_staff`
-- `biomedical_engineer`
-- `health_manager`
-
-Role-based dependencies restrict access to operations according to the required role.
-
-### 7.3 Password and MFA security
-
-The backend implements several controls to protect user authentication and session information.
-
-These include:
-
-- **Password hashing:** Argon2 is used to hash user passwords.
-- **Multi-factor authentication:** The backend supports six-digit TOTP verification.
-- **MFA secret encryption:** Stored MFA secrets are encrypted using AES-256-GCM.
-- **Session-token protection:** Session tokens are stored as hashes rather than plaintext values.
-- **Login-attempt limiting:** The login flow implements an attempt limiter to restrict repeated authentication attempts.
-
-The MFA encryption key is supplied through application configuration.
-
-The login-attempt limiter is maintained in application memory. Its state does not persist across server restarts and should not be described as a distributed rate-limiting mechanism.
-
-## 8. Environment Configuration
-
-Application settings are managed through `config.py` using Pydantic Settings.
-
-The configuration supports:
-
-- Application environment settings
-- Session duration and cookie configuration
-- Redis connection settings
-- MFA encryption and issuer settings
-- Frontend and dashboard base URLs
-- Email backend selection
-- SMTP server configuration
-- Email sender configuration
-
-Environment variables are loaded from `.env` when available.
-
-Configuration values and defaults do not, by themselves, establish that an external service such as Redis or SMTP is active in a particular deployment.
-
-## 9. Testing and Code Quality
+## 10. Testing and Code Quality
 
 The backend uses pytest for automated testing.
 
-The test directory is organised into:
+The test directory is organized into separate areas covering different aspects of the application.
 
-- `auth_tests/`
-- `equipment_tests/`
-- `model_tests/`
-- `security_tests/`
-- `session_tests/`
+### 10.1 Test Organization
 
-The project also includes:
+The existing test directories include:
 
-- Ruff for linting and formatting
-- pytest-cov for test coverage reporting
+| Directory | Testing Focus |
+|---|---|
+| `auth_tests/` | Authentication functionality |
+| `equipment_tests/` | Equipment-related functionality |
+| `model_tests/` | Database model functionality |
+| `security_tests/` | Security-related functionality |
+| `session_tests/` | Session management functionality |
 
-The project configuration specifies Python 3.11 as the Ruff target and uses an 88-character line length.
+### 10.2 Testing Framework
 
-## 10. Deployment
+The backend uses:
 
-The backend includes a `Procfile` defining its web process:
+- **pytest:** Executes automated tests.
+- **pytest-cov:** Supports test coverage reporting.
 
-`web: uvicorn main:app --host 0.0.0.0 --port $PORT`
+### 10.3 Code Quality
 
-The project README documents deployment using Heroku and CI workflows.
+The project uses Ruff for Python linting and formatting.
 
-Production configuration values, including database connection and security settings, should be supplied through the deployment environment rather than committed to source control.
+The project configuration specifies:
 
-## 11. Summary
+- Python 3.11 as the Ruff target.
+- An 88-character line length.
 
-The Waliin backend provides a FastAPI-based REST API for managing medical equipment lifecycles in Ethiopian hospitals.
+These settings support consistent Python code formatting and static code checks.
 
-Its 14 registered router groups cover authentication, user management, equipment registration, fault reporting and assessment, prioritisation, repair operations, verification records, maintenance reporting, notifications and resource request workflows.
+### 10.4 Running Backend Tests
 
-The layered architecture separates routing, validation, business logic and database access. SQLAlchemy and PostgreSQL support data persistence, while Alembic manages database schema migrations.
+The backend test suite can be executed using:
 
-Authentication and security controls include Argon2 password hashing, multi-factor authentication, encrypted MFA secrets and session management.
-
-## Backend Resources
-
-The following resource provides access to the deployed Waliin backend API documentation.
-
-### Interactive API Documentation
-
-The backend exposes interactive API documentation through Swagger UI. It provides an interface for exploring the available API endpoints and their request and response schemas.
-
-[Open Waliin Backend API Documentation](https://waliin-8c96dd4bd190.herokuapp.com/docs)
+```bash
+uv run --active pytest -q

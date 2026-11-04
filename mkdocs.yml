@@ -1,8 +1,9 @@
----
+
 site_name: Solvya Technical Documentation
 site_description: >-
   Technical documentation for the Solvya Healthcare Equipment Management System
 site_author: Solvya Development Team
+
 theme:
   name: material
   logo: assets/images/waliin-sidebar-logo.svg
@@ -18,11 +19,20 @@ theme:
     - content.code.copy
     - toc.integrate
 
+plugins:
+  - search
+  - glightbox:
+      effect: zoom
+      zoomable: true
+      draggable: true
+      touchNavigation: true
+
 extra_css:
   - assets/stylesheets/extra.css
 
 markdown_extensions:
   - admonition
+  - meta
   - attr_list
   - tables
   - toc:
@@ -34,16 +44,17 @@ nav:
   - Home: index.md
 
   - Project:
-      - Architecture: architecture.md
-
-  - Brand Guidelines: brand-guideline.md
+      - Project Overview: overview.md
+      - Problem Exploration: problem-exploration.md
+      - Brand Guidelines: brand-guideline.md
 
   - Technical Documentation:
+      - System Architecture: architecture.md
       - Technical Reference: technical-reference.md
-      - API Reference: api-reference.md
-      - Database Design: database-design.md
       - Frontend Documentation: frontend-documentation.md
       - Backend Documentation: backend-documentation.md
+      - API Reference: api-reference.md
+      - Database Design: database-design.md
       - Authentication and Security: authentication-and-security.md
 
   - Guides:
@@ -51,6 +62,7 @@ nav:
       - Deployment Guide: deployment-guide.md
       - Testing: testing.md
 
-  - Team: team.md
+  - Resources:
+      - Glossary: glossary.md
 
-  - Glossary: glossary.md
+  - Team: team.md

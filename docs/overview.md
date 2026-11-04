@@ -1,14 +1,19 @@
+
 # Waliin Project Overview
 
 ## 1. Introduction
 
 Waliin is a healthcare equipment management system developed by Solvya. It is designed to support the management and monitoring of medical equipment within healthcare facilities.
 
-The platform brings equipment information and maintenance-related activities into one system, helping users manage equipment records, report faults and follow repair activities.
+The platform brings equipment information and maintenance-related activities into one system, helping users manage equipment records, report faults, coordinate repair activities, and monitor equipment maintenance.
 
-## Documentation status
+### 1.1 Documentation Scope
 
-This overview is a documentation artifact describing the Waliin system as represented in this repository. It is not a runtime-verified implementation record of the live application. The documentation reflects the project design, documented workflows, and intended platform structure, and should be validated against the authoritative project implementation before being treated as operational truth.
+This documentation describes Waliin's system structure, technical implementation, functionality, and development workflows.
+
+It draws on the project documentation, frontend and backend application repositories, and testing activities conducted during development.
+
+Individual implementation details and operational behaviour should be interpreted in the context of the relevant application code and verification results.
 
 ## 2. Project Purpose
 
@@ -21,7 +26,9 @@ Its main objectives are to:
 - Allow users to report equipment faults.
 - Support technical assessment and repair tracking.
 - Record repair verification activities.
+- Coordinate resource requests and external support.
 - Provide maintenance summaries and reports.
+- Support communication through system notifications.
 
 ## 3. Intended Users
 
@@ -29,9 +36,9 @@ Waliin defines three main user roles:
 
 | User role | General responsibility |
 |---|---|
-| `health_manager` | Health management activities |
-| `biomedical_engineer` | Equipment assessment and technical activities |
-| `clinical_staff` | Clinical equipment-related activities |
+| `health_manager` | Health management and administrative activities |
+| `biomedical_engineer` | Equipment assessment, maintenance, and technical activities |
+| `clinical_staff` | Clinical equipment-related activities and fault reporting |
 
 ## 4. Core System Capabilities
 
@@ -47,20 +54,31 @@ The backend provides operations for:
 - Reviewing pending equipment records.
 - Approving or returning equipment records.
 - Importing equipment records through CSV.
+- Managing equipment-related documents.
 
 ### 4.2 Fault Management
 
-Users can report equipment faults. The system provides functionality for retrieving fault records, assigning faults, updating their status and closing faults.
+Users can report equipment faults. The system provides functionality for retrieving fault records, assigning faults, updating their status, and closing faults.
 
 ### 4.3 Technical Assessment and Repair
 
-The backend supports fault assessments, repair records, testing and equipment release operations.
+The backend supports fault assessments, technical findings, repair records, testing, and equipment release operations.
 
 ### 4.4 Repair Verification
 
-Waliin provides repair verification records to document verification activities associated with equipment repairs.
+Waliin provides repair verification records to document repair activities, test results, and equipment release decisions.
 
-### 4.5 Maintenance Reporting
+### 4.5 Resource Requests and Follow-ups
+
+The system supports requests for spare parts, technical support, replacement resources, and new equipment.
+
+It also provides functionality for recording follow-up communications and responses relating to resource requests.
+
+### 4.6 Notifications
+
+Waliin provides in-app notifications to communicate relevant equipment, fault, and resource-request updates to users.
+
+### 4.7 Maintenance Reporting
 
 The system provides maintenance summary data and a PDF maintenance summary endpoint.
 
@@ -84,8 +102,12 @@ The main technologies used by Waliin include:
 Use the following pages for more detailed technical information:
 
 - [System Architecture](architecture.md)
-- [API Reference](api-reference.md)
-- [Database Design](database-design.md)
 - [Frontend Documentation](frontend-documentation.md)
 - [Backend Documentation](backend-documentation.md)
-
+- [API Reference](api-reference.md)
+- [Database Design](database-design.md)
+- [Authentication and Security](authentication-and-security.md)
+- [Deployment Guide](deployment-guide.md)
+- [Developer Guide](developer-guide.md)
+- [Testing](testing.md)
+- [Technical Reference](technical-reference.md)

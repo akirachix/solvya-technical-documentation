@@ -5,13 +5,29 @@
 
 Waliin's frontend consists of web applications developed using Next.js, React and TypeScript.
 
-It provides the user interfaces through which healthcare professionals interact with the system's equipment management functionality.
+The frontend provides the user interfaces through which healthcare professionals interact with the system's equipment management functionality.
 
 The frontend uses the Next.js App Router and communicates with the FastAPI backend through HTTP API requests.
 
-The frontend supports different user roles, providing interfaces for clinical staff, biomedical engineers and health managers.
+Waliin provides separate user-facing interfaces for clinical staff, biomedical engineers and health managers. The available interface and navigation depend on the user's role.
+
+### 1.1 Purpose
+
+This document describes the frontend implementation, including:
+
+- Frontend technologies and project structure.
+- Application initialization and routing.
+- Authentication integration.
+- API communication with the backend.
+- Shared interface components.
+- Equipment management interfaces.
+- Styling and frontend testing.
+
+Backend implementation, API specifications, database structures and deployment procedures are documented separately.
 
 ## 2. Technology Stack
+
+The frontend uses the following technologies and libraries.
 
 | Technology | Version | Purpose |
 |---|---|---|
@@ -37,6 +53,12 @@ The frontend project organizes its implementation into application routes, reusa
 | `components/` | Reusable interface components |
 | `lib/` | API client, authentication and application utilities |
 | `public/` | Static application assets |
+
+**Frontend implementation reference:**
+
+![Waliin frontend project documentation](assets/images/frontend_documentation.png)
+
+<small>Figure 1: Frontend application implementation reference.</small>
 
 ### 3.2 Application Entry Points
 
@@ -84,6 +106,8 @@ The `UserProfileProvider` provides user profile information through React contex
 It retrieves the current user through the backend authentication API and exposes user information to application components.
 
 This allows application components to access the current user's profile and role information.
+
+The frontend uses this information to support role-dependent navigation and interface presentation.
 
 Authentication and authorization are ultimately enforced by the backend.
 
@@ -143,7 +167,7 @@ The following application routes are present in the project:
 | `/biomedical-engineer/faults` | Fault management |
 | `/biomedical-engineer/faults/[faultId]` | Fault details |
 
-These routes represent the documented application pages and are not an exhaustive list of every possible frontend route.
+These routes represent documented application pages and are not an exhaustive list of every possible frontend route.
 
 ## 7. Shared Interface Components
 
@@ -187,6 +211,8 @@ Equipment registration components include:
 
 These components support the equipment registration workflow, including equipment details, location information, document uploads, review and CSV import functionality.
 
+The registration workflow organizes equipment information into separate components to support data entry and review.
+
 ## 9. Frontend Styling
 
 The frontend uses Tailwind CSS 4 and global styles defined in `app/globals.css`.
@@ -227,23 +253,23 @@ These commands support local development, production builds, testing and code qu
 - [Deployment Guide](deployment-guide.md)
 - [Testing](testing.md)
 
-## Frontend Application Resources
+## 12. Frontend Application Resources
 
 The following links provide access to the deployed Waliin frontend applications and the Solvya informational website.
 
-### Progressive Web Application (PWA)
+### 12.1 Progressive Web Application (PWA)
 
 The Waliin PWA provides users with access to key equipment management functions, including equipment-related workflows and fault reporting.
 
 [Open Waliin PWA](https://waliin-solvya.vercel.app/home)
 
-### Waliin Dashboard
+### 12.2 Waliin Dashboard
 
 The Waliin Dashboard provides the management interface for accessing the system's administrative and equipment-management functionality.
 
 [Open Waliin Dashboard](https://waliin.vercel.app/)
 
-### Solvya Informational Website
+### 12.3 Solvya Informational Website
 
 The informational website introduces Solvya and provides an overview of its work and solutions.
 

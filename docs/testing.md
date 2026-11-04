@@ -7,15 +7,25 @@ Testing helps verify that Waliin behaves as expected and that changes do not int
 
 Waliin has separate frontend and backend projects, each with its own testing and quality-check tools.
 
-## Documentation and evidence boundary
+This document describes the testing tools, commands, functional areas and verification workflows used during the development of Waliin.
 
-This repository contains the technical documentation site rather than the underlying application implementation or test suite. The testing guidance in this section reflects recommended verification practices for the documented system, but it is not evidence of executed application tests in this repository.
+## 2. Documentation and Testing Scope
 
-The validation steps described here should be treated as project guidance unless they are confirmed against the authoritative application repository and runtime environment.
+Testing was conducted in the individual Waliin application repositories, covering both frontend and backend functionality.
 
-This guide describes the available testing tools, functional testing areas and recommended verification workflow.
+The frontend and backend repositories maintain their respective test suites and quality-check tools. Testing was performed within these repositories to verify application functionality, identify issues and assess code quality.
 
-## 2. Frontend Testing
+This documentation consolidates the testing tools, commands, functional areas and verification workflows used during the development process.
+
+The results documented should reflect the actual tests and checks performed in the respective application repositories.
+
+A distinction is maintained between:
+
+- **Automated testing:** Tests executed through the frontend and backend testing frameworks.
+- **Code quality checks:** Linting, formatting and build checks.
+- **Manual verification:** Direct examination of application behaviour and user workflows.
+
+## 3. Frontend Testing
 
 The frontend uses Vitest as its test runner.
 
@@ -31,6 +41,10 @@ This runs:
 vitest run --passWithNoTests
 ```
 
+The `--passWithNoTests` option allows the test command to complete successfully when no test files are present. A successful command therefore does not necessarily indicate that frontend tests were executed.
+
+### 3.1 Frontend Quality Checks
+
 The frontend also provides additional quality-check commands:
 
 | Command | Purpose |
@@ -41,31 +55,64 @@ The frontend also provides additional quality-check commands:
 | `npm run format` | Format project files |
 | `npm run build` | Build the Next.js application |
 
-The frontend test suite supports verification of individual application components and functionality.
+The frontend test suite supports verification of individual application components and functionality where corresponding tests are available.
 
-The `--passWithNoTests` option allows the test command to complete successfully when no test files are present.
+### 3.2 Frontend Verification Areas
 
-## 3. Backend Testing
+Frontend verification should cover:
+
+- Page rendering and navigation.
+- Form validation.
+- User authentication flows.
+- API request and response handling.
+- Loading and error states.
+- Role-oriented navigation.
+- Equipment registration and management workflows.
+- Fault reporting and repair-related workflows.
+
+These areas describe recommended verification coverage and should not be interpreted as evidence that every workflow has an automated test.
+
+## 4. Backend Testing
 
 The backend uses pytest for automated testing.
 
 Ruff is used for Python code-quality checks.
 
-### 3.1 Running Backend Tests
+### 4.1 Running Backend Tests
 
 From the backend project directory, run:
 
 ```bash
-uv run pytest -q
+uv run --active pytest -q
 ```
 
-To run tests for a specific module or test directory:
+To run tests from the test directory:
 
 ```bash
-uv run pytest tests/
+uv run --active pytest tests/
 ```
 
-### 3.2 Code Quality Checks
+To run tests for a specific area:
+
+```bash
+uv run --active pytest tests/equipment_tests/
+```
+
+The test directories cover different backend functionality.
+
+### 4.2 Backend Test Organization
+
+The backend test directories include:
+
+| Directory | Testing Focus |
+|---|---|
+| `auth_tests/` | Authentication functionality |
+| `equipment_tests/` | Equipment-related functionality |
+| `model_tests/` | Database model functionality |
+| `security_tests/` | Security-related functionality |
+| `session_tests/` | Session management functionality |
+
+### 4.3 Backend Code Quality Checks
 
 Run Ruff to check Python code quality:
 
@@ -73,13 +120,25 @@ Run Ruff to check Python code quality:
 uv run ruff check .
 ```
 
+Ruff supports the identification of code-quality issues and helps maintain consistent Python code.
+
+### 4.4 Backend Test Implementation Reference
+
+The following image illustrates a backend health-check testing example.
+
+![Waliin backend health check test example](assets/images/test_health_snippet.png)
+
+<small>Figure 1: Backend health-check test implementation reference.</small>
+
 These tools support verification of backend functionality, expected application behaviour and code consistency.
 
-## 4. Testing Scope
+## 5. Functional Testing Scope
 
 Testing activities should cover the main functional areas of Waliin.
 
-### 4.1 Authentication
+The following areas provide recommended verification coverage.
+
+### 5.1 Authentication
 
 Verify:
 
@@ -90,7 +149,7 @@ Verify:
 - Multi-factor authentication operations.
 - Session handling and authentication requirements.
 
-### 4.2 Equipment Management
+### 5.2 Equipment Management
 
 Verify:
 
@@ -100,7 +159,7 @@ Verify:
 - Equipment document handling.
 - CSV equipment import.
 
-### 4.3 Fault and Repair Management
+### 5.3 Fault and Repair Management
 
 Verify:
 
@@ -111,14 +170,14 @@ Verify:
 - Equipment release operations.
 - Repair verification records.
 
-### 4.4 Maintenance Reporting
+### 5.4 Maintenance Reporting
 
 Verify:
 
 - Maintenance summary retrieval.
 - Maintenance summary PDF generation.
 
-### 4.5 Notifications and Resource Requests
+### 5.5 Notifications and Resource Requests
 
 Verify:
 
@@ -127,7 +186,7 @@ Verify:
 - Request item management.
 - Request follow-up operations.
 
-## 5. API Verification
+## 6. API Verification
 
 Backend API endpoints should be checked for:
 
@@ -143,22 +202,37 @@ API verification can be performed through automated backend tests and the intera
 
 [Open Waliin Swagger UI](https://waliin-8c96dd4bd190.herokuapp.com/docs)
 
-## 6. Frontend Verification
+## 7. Manual Application Verification
 
-Frontend verification should cover:
+Manual verification complements automated testing by checking application behaviour through the user interfaces.
 
-- Page rendering and navigation.
-- Form validation.
-- User authentication flows.
-- API request and response handling.
-- Loading and error states.
-- Role-oriented navigation.
-- Equipment registration and management workflows.
-- Fault reporting and repair-related workflows.
+### 7.1 Frontend Verification
 
-Frontend verification should confirm that user actions produce the expected interface responses and that backend errors are communicated appropriately.
+Frontend verification should confirm that:
 
-## 7. Testing Workflow
+- Application pages render correctly.
+- Navigation leads to the expected pages.
+- Forms accept valid information and handle invalid input appropriately.
+- Authentication flows behave as expected.
+- Loading and error states are communicated clearly.
+- Role-dependent navigation presents the appropriate interface.
+- Equipment registration and management workflows behave as expected.
+- Fault reporting and repair-related workflows communicate correctly with the backend.
+
+### 7.2 Backend and API Verification
+
+Backend and API verification should confirm that:
+
+- API endpoints return the expected responses.
+- Request validation handles invalid data appropriately.
+- Authentication and authorization requirements are enforced.
+- Database operations produce the expected results.
+- Error responses communicate relevant information.
+- File-related operations handle supported uploads and downloads.
+
+Manual verification should be recorded separately from automated test results.
+
+## 8. Testing Workflow
 
 A typical verification workflow is:
 
@@ -167,19 +241,19 @@ A typical verification workflow is:
 3. Run the relevant automated tests.
 4. Run linting and formatting checks.
 5. Build the frontend when frontend code changes.
-6. Verify the affected application functionality.
+6. Perform manual verification of the affected application functionality.
 7. Document any known issues.
 
-### 7.1 Recommended Verification Commands
+### 8.1 Recommended Verification Commands
 
-Backend:
+**Backend**
 
 ```bash
-uv run pytest -q
+uv run --active pytest -q
 uv run ruff check .
 ```
 
-Frontend:
+**Frontend**
 
 ```bash
 npm run test
@@ -190,7 +264,7 @@ npm run build
 
 Run the relevant checks from the respective project directories.
 
-## 8. Test Reporting
+## 9. Test Reporting
 
 Testing results should record:
 
@@ -200,9 +274,29 @@ Testing results should record:
 - Known issues that remain unresolved.
 - Relevant changes made to address identified problems.
 
-Test results should reflect actual execution. A successful build or lint check should not be reported as evidence that all application workflows have been tested.
+Test results should reflect actual execution.
 
-## 9. Related Documentation
+A successful build or lint check should not be reported as evidence that all application workflows have been tested.
+
+Similarly, a successful test command that executes no tests should not be reported as evidence of successful functional test coverage.
+
+### 9.1 Reporting Test Results
+
+When documenting test results, distinguish between:
+
+| Result Type | What It Demonstrates |
+|---|---|
+| Tests passed | The executed tests completed successfully. |
+| Tests failed | One or more executed tests did not pass. |
+| Tests skipped | Tests were not executed because of configured skip conditions. |
+| No tests collected | No matching tests were found for execution. |
+| Linting passed | The configured linting checks completed successfully. |
+| Build passed | The application production build completed successfully. |
+| Manual verification passed | The specific manually checked workflow behaved as expected. |
+
+These results should be reported independently rather than combined into a general claim that the entire application has been tested.
+
+## 10. Related Documentation
 
 - [Developer Guide](developer-guide.md)
 - [Deployment Guide](deployment-guide.md)
@@ -211,3 +305,4 @@ Test results should reflect actual execution. A successful build or lint check s
 - [API Reference](api-reference.md)
 - [Database Design](database-design.md)
 - [Authentication and Security](authentication-and-security.md)
+- [System Architecture](architecture.md)

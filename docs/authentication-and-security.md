@@ -5,7 +5,11 @@
 
 Waliin uses a backend authentication and authorization system to control access to application functionality and protect user accounts.
 
-Authentication is implemented through the FastAPI backend. The frontend communicates with the authentication endpoints through its API client.
+Authentication is implemented through the FastAPI backend. The frontend communicates with authentication endpoints through its API client.
+
+The backend uses session-based authentication, role-based authorization, password hashing, and multi-factor authentication to protect application access.
+
+This document describes the authentication mechanisms, authorization controls, session management, and security considerations implemented in Waliin.
 
 The backend uses session-based authentication, role-based access controls, password hashing and multi-factor authentication to protect application access.
 
@@ -16,7 +20,7 @@ The backend defines three user roles:
 | Role | Description |
 |---|---|
 | `health_manager` | Health management user responsible for administrative and management activities. |
-| `biomedical_engineer` | Biomedical engineering user responsible for equipment management, technical assessments and repair activities. |
+| `biomedical_engineer` | Biomedical engineering user responsible for equipment management, technical assessments, and repair activities. |
 | `clinical_staff` | Clinical staff user responsible for reporting equipment faults and accessing relevant equipment information. |
 
 These roles identify the categories of users supported by the application.
@@ -25,7 +29,7 @@ The backend uses role-related authorization dependencies to restrict access to p
 
 ## 3. Authentication Features
 
-The backend provides the following authentication operations:
+The backend provides the following authentication functionality:
 
 - User login and logout.
 - Retrieving the currently authenticated user.
@@ -38,21 +42,9 @@ The backend provides the following authentication operations:
 
 These operations are implemented through the authentication router.
 
-## 4. Authentication API Endpoints
+For endpoint paths, HTTP methods, request parameters, and response details, refer to the [API Reference](api-reference.md).
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| POST | `/auth/login` | Authenticate a user. |
-| POST | `/auth/logout` | End the authenticated session. |
-| GET | `/auth/me` | Retrieve the current authenticated user. |
-| POST | `/auth/mfa/setup` | Begin MFA setup. |
-| POST | `/auth/mfa/confirm` | Confirm MFA setup. |
-| POST | `/auth/mfa/verify` | Verify MFA. |
-| POST | `/auth/accept-invite` | Accept a user invitation. |
-| POST | `/auth/forgot-password` | Request a password reset. |
-| POST | `/auth/reset-password` | Complete a password reset. |
-
-## 5. Session Management
+## 4. Session Management
 
 The backend uses session-based authentication through a secure session cookie.
 
@@ -71,7 +63,7 @@ The cookie is configured with the following security attributes:
 | Idle timeout | 15 minutes |
 | Maximum session lifetime | 8 hours |
 
-### 5.1 Session Security Controls
+### 4.1 Session Security Controls
 
 The backend implements the following session protections:
 
@@ -85,7 +77,7 @@ The backend implements the following session protections:
 
 These controls help protect authenticated sessions and reduce the risk of unauthorized account access.
 
-## 6. Password Security
+## 5. Password Security
 
 The backend uses Argon2 password hashing through the `pwdlib` library.
 
@@ -93,7 +85,21 @@ Password hashing protects stored password credentials by avoiding storage of pas
 
 The system stores password hashes rather than original passwords.
 
-## 7. Multi-Factor Authentication
+### 5.1 Password Hashing Implementation Example
+
+The following example illustrates the password hashing and verification functions used in Waliin.
+
+![Waliin password hashing implementation example](assets/images/security_code_snippet.png)
+
+The example demonstrates:
+
+- Importing the password hashing helper functions.
+- Generating a password hash before storage.
+- Verifying a submitted password against the stored hash.
+
+Argon2 provides password hashing designed to make password guessing more computationally expensive.
+
+## 6. Multi-Factor Authentication
 
 Waliin implements multi-factor authentication (MFA) through the authentication API.
 
@@ -105,7 +111,7 @@ MFA functionality includes:
 - Confirming MFA setup.
 - Verifying MFA during authentication.
 
-### 7.1 MFA Secret Protection
+### 6.1 MFA Secret Protection
 
 The backend encrypts stored MFA secrets using AES-256-GCM.
 
@@ -113,7 +119,7 @@ The encryption key is supplied through application configuration rather than bei
 
 This protects stored MFA secrets from being exposed as readable values in the database.
 
-## 8. Authorization and User Access
+## 7. Authorization and User Access
 
 Waliin uses role-based authorization to control access to application functionality.
 
@@ -131,7 +137,9 @@ Authorization decisions must be enforced by the backend rather than relying sole
 
 The exact permissions for individual endpoints should be checked against their corresponding backend authorization dependencies.
 
-## 9. Login Attempt Protection
+For endpoint-level information, refer to the [API Reference](api-reference.md).
+
+## 8. Login Attempt Protection
 
 The backend implements a login-attempt limiter to restrict repeated authentication attempts.
 
@@ -145,7 +153,7 @@ Consequently:
 
 This distinction is important when considering security controls in a multi-instance production deployment.
 
-## 10. Security Configuration
+## 9. Security Configuration
 
 Security-related application settings are managed through backend configuration.
 
@@ -159,7 +167,9 @@ These include:
 
 Sensitive configuration values should be supplied through the deployment environment and should not be committed to source control.
 
-## 11. Security Considerations
+Refer to the [Deployment Guide](deployment-guide.md) for deployment-related configuration information.
+
+## 10. Security Considerations
 
 The implemented authentication and session controls provide a foundation for protecting Waliin user accounts and application access.
 
@@ -169,24 +179,35 @@ The following areas should also be considered during security review and deploym
 - Ensure production deployments use HTTPS.
 - Keep encryption keys and other secrets outside source control.
 - Review session expiration and account deactivation behaviour.
-- Test MFA setup, confirmation and verification flows.
+- Test MFA setup, confirmation, and verification flows.
 - Test login-attempt limiting and its behaviour across application restarts.
-- Ensure diagnostic logs do not expose passwords, session tokens or encryption keys.
+- Ensure diagnostic logs do not expose passwords, session tokens, or encryption keys.
 - Review database and uploaded-document access permissions.
 
 These are security review considerations and should not be interpreted as confirmation that every item is already implemented.
 
-## 12. Related Documentation
+## 11. Related Documentation
 
 - [Backend Documentation](backend-documentation.md)
 - [API Reference](api-reference.md)
 - [Database Design](database-design.md)
 - [System Architecture](architecture.md)
+- [Deployment Guide](deployment-guide.md)
 
-## Security Architecture Resource
+## 12. Security Architecture Resource
 
-The following Software System Architecture Document (SSAD) is provided as an additional reference for the system's security architecture.
+The following Software System Architecture Document (SSAD) provides an additional reference for Waliin's security architecture.
 
-### Software System Architecture Document (SSAD)
+It illustrates the security zones, application boundaries, data protection components, and shared security services represented in the system design.
 
-[Open Waliin SSAD – Figma](https://www.figma.com/board/tYkPMimzCkAXrX8OZTOQpa/Solvya-SSAD?node-id=0-1&p=f)
+### 12.1 Secure System Architecture Diagram (SSAD)
+
+![Waliin Secure System Architecture Diagram](assets/images/solvya-ssad.png)
+
+*Figure: Waliin Secure System Architecture Diagram.*
+
+The diagram represents the proposed security architecture. Its individual controls should be verified against the deployed application and infrastructure before being described as operationally implemented.
+
+### 12.2 External Architecture Resource
+
+[Open Waliin SSAD – Figma](https://www.figma.com/board/tYkPMimZcAXrX8OZTOQpa/Solvya-SSAD?node-id=0-1&p=f)

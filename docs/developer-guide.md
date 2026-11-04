@@ -9,6 +9,23 @@ Waliin consists of a Next.js frontend and a FastAPI backend, with PostgreSQL as 
 
 The frontend communicates with the backend through HTTP API requests, while the backend handles application logic, authentication, authorization and database operations.
 
+This guide covers development prerequisites, local setup, testing, database migrations and version control practices.
+
+### 1.1 Purpose
+
+This document provides developers with guidance on:
+
+- Development environment requirements.
+- Frontend and backend project organization.
+- Local application setup.
+- Dependency installation and configuration.
+- Running frontend and backend applications.
+- Testing and code quality checks.
+- Database migration workflows.
+- Version control practices.
+
+Detailed implementation information is documented in the respective frontend, backend and database documentation.
+
 ## 2. Development Prerequisites
 
 The development environment requires the following tools:
@@ -27,6 +44,8 @@ Developers should also have access to the project repositories and the required 
 ## 3. Project Structure
 
 Waliin is maintained in separate frontend and backend projects.
+
+Each project has its own dependencies, configuration and development workflow.
 
 ### 3.1 Frontend
 
@@ -47,7 +66,9 @@ The backend uses FastAPI and Python.
 
 Its main application entry point is `main.py`.
 
-The application registers router groups for:
+The backend separates routing, validation, business logic, database access and storage responsibilities.
+
+Its main application areas include:
 
 - Authentication.
 - User management.
@@ -64,7 +85,13 @@ The application registers router groups for:
 - Request items.
 - Request follow-ups.
 
-The backend separates routing, validation, business logic, database access and storage responsibilities.
+**Backend implementation reference:**
+
+![Waliin backend development code example](assets/images/developer_guide.png)
+
+<small>Figure 1: Backend development implementation reference.</small>
+
+For detailed project structures, refer to the [Frontend Documentation](frontend-documentation.md) and [Backend Documentation](backend-documentation.md).
 
 ## 4. Development Workflow
 
@@ -79,6 +106,20 @@ A typical development workflow includes:
 7. Update technical documentation when necessary.
 
 Changes affecting both frontend and backend should be checked together to ensure that API contracts remain consistent.
+
+### 4.1 Running the Application Locally
+
+During local development, the frontend and backend run as separate applications.
+
+The backend provides the API services, while the frontend provides the user interface.
+
+Developers should:
+
+1. Start the PostgreSQL database.
+2. Configure and start the backend.
+3. Configure and start the frontend.
+4. Verify that the frontend can communicate with the backend.
+5. Test the relevant application workflows.
 
 ## 5. Backend Development Setup
 
@@ -174,6 +215,8 @@ cd /path/to/solvya-frontend
 
 ### 6.2 Install Dependencies
 
+Install the project dependencies:
+
 ```bash
 npm install
 ```
@@ -189,6 +232,8 @@ Ensure that the frontend can reach the running FastAPI backend.
 
 ### 6.4 Start the Frontend Server
 
+Start the Next.js development server:
+
 ```bash
 npm run dev
 ```
@@ -196,6 +241,8 @@ npm run dev
 The Next.js development server provides the local frontend application.
 
 ## 7. Testing and Quality Checks
+
+Testing and quality checks help verify application functionality and maintain code consistency.
 
 ### 7.1 Frontend Commands
 
@@ -218,7 +265,7 @@ The backend uses pytest for automated tests and Ruff for Python code quality che
 Run the backend tests:
 
 ```bash
-uv run pytest -q
+uv run --active pytest -q
 ```
 
 Run Ruff checks:
@@ -229,33 +276,47 @@ uv run ruff check .
 
 The commands should be executed from the backend project directory with the appropriate dependencies installed.
 
-## 8. Database Migrations
+### 7.3 Testing Guidance
+
+Developers should:
+
+- Run relevant tests after implementing changes.
+- Check that existing functionality remains operational.
+- Verify API request and response compatibility.
+- Review validation and error-handling behaviour.
+- Resolve relevant linting and formatting issues before submitting changes.
+
+For more information, refer to the [Testing](testing.md) documentation.
+
+## 8. Database Migration Workflow
 
 Waliin uses Alembic to manage database schema changes.
 
 Database migrations should be maintained as versioned migration files so that database structure changes can be applied consistently across environments.
 
-Common migration commands include:
+### 8.1 Apply Migrations
 
-**Apply migrations:**
+Apply all pending migrations:
 
 ```bash
 uv run alembic upgrade head
 ```
 
-**View the current migration revision:**
+### 8.2 View the Current Migration Revision
 
 ```bash
 uv run alembic current
 ```
 
-**View migration history:**
+### 8.3 View Migration History
 
 ```bash
 uv run alembic history
 ```
 
-**Generate a migration from model changes:**
+### 8.4 Generate a Migration
+
+Generate a migration from model changes:
 
 ```bash
 uv run alembic revision --autogenerate -m "Describe schema change"
@@ -264,6 +325,8 @@ uv run alembic revision --autogenerate -m "Describe schema change"
 Generated migrations should be reviewed before being applied. Developers should verify that the migration correctly represents the intended schema changes.
 
 Previously applied migrations should not be edited to introduce new schema changes. Create a new migration revision instead.
+
+For the database schema and its relationships, refer to the [Database Design](database-design.md) document.
 
 ## 9. Version Control
 
@@ -279,18 +342,37 @@ A typical workflow includes:
 6. Push the branch to the remote repository.
 7. Open a pull request for review.
 
-Useful Git commands include:
+### 9.1 Useful Git Commands
+
+Check the working tree:
 
 ```bash
 git status
+```
+
+Check the current branch:
+
+```bash
 git branch --show-current
+```
+
+Review changes:
+
+```bash
 git diff
+```
+
+Check for whitespace errors:
+
+```bash
 git diff --check
 ```
 
 Only commit files related to the intended change. Avoid committing generated build directories, local environment files and application secrets.
 
 ## 10. Development Best Practices
+
+Developers should follow these practices when working on Waliin:
 
 - Keep frontend and backend responsibilities separate.
 - Reuse existing API client and authentication utilities.

@@ -11,6 +11,8 @@ The backend uses session-based authentication, role-based authorization, passwor
 
 This document describes the authentication mechanisms, authorization controls, session management, and security considerations implemented in Waliin.
 
+The backend uses session-based authentication, role-based access controls, password hashing and multi-factor authentication to protect application access.
+
 ## 2. User Roles
 
 The backend defines three user roles:

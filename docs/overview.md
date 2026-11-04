@@ -15,6 +15,10 @@ It draws on the project documentation, frontend and backend application reposito
 
 Individual implementation details and operational behaviour should be interpreted in the context of the relevant application code and verification results.
 
+## Documentation status
+
+This overview is a documentation artifact describing the Waliin system as represented in this repository. It is not a runtime-verified implementation record of the live application. The documentation reflects the project design, documented workflows, and intended platform structure, and should be validated against the authoritative project implementation before being treated as operational truth.
+
 ## 2. Project Purpose
 
 Waliin provides a structured way to manage the lifecycle of healthcare equipment.

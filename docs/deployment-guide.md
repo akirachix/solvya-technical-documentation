@@ -30,6 +30,8 @@ This document covers:
 
 Detailed application architecture, backend implementation, API specifications and database structures are documented separately.
 
+The frontend provides the user interface, the backend handles application logic and API requests, and PostgreSQL stores application data.
+
 ## 2. Deployment Architecture
 
 The production deployment separates the frontend applications, backend API and database.
